@@ -12,9 +12,11 @@ namespace Khaale.TechTalks.AwesomeLibraries.IntegrationService.Cli.Commands
 
         public override int Run(string[] remainingArguments)
         {
-            var serviceLookup = new ServiceLookup();
+            var serviceLookup = new ServiceLookupWithFallback(
+                new ServiceLookup("dev"), 
+                new ServiceLookupFromAppConfig());
 
-            var address = serviceLookup.GetServiceUri("IntegrationService", "dev");
+            var address = serviceLookup.GetServiceUri("IntegrationService");
 
             var httpClient = new HttpClient();
             httpClient.BaseAddress = address;

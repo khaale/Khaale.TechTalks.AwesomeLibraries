@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using System.Web.Http;
-using Khaale.TechTalks.AwesomeLibraries.Shared.ServiceDiscovery;
-using Khaale.TechTalks.AwesomeLibrary.BusinessService.Api.Controllers;
-using Ninject.Modules;
+using Khaale.TechTalks.AwesomeLibrary.BusinessService.Registration;
 using Topshelf;
 using Topshelf.Ninject;
 using Topshelf.WebApi;
@@ -16,6 +10,18 @@ namespace Khaale.TechTalks.AwesomeLibrary.BusinessService
 {
     public class Program
     {
+        public static string ServiceName { get { return "BusinessService"; } }
+
+        public static string Environment
+        {
+            get { return ConfigurationManager.AppSettings["Environment"] ?? "dev"; }
+        }
+
+        public static int ServicePort
+        {
+            get { return int.Parse(ConfigurationManager.AppSettings["ServicePort"] ?? "12346"); }
+        }
+
         static void Main()
         {
             HostFactory.Run(c =>
@@ -61,51 +67,6 @@ namespace Khaale.TechTalks.AwesomeLibrary.BusinessService
             );
             
             SwaggerConfig.Register(configuration);
-        }
-
-        /*
-        private static void ConfigureRoutes(System.Web.Http.HttpRouteCollection routes)
-        {
-            routes.MapHttpRoute(
-                    "DefaultApiWithId",
-                    "Api/{controller}/{id}",
-                    new { id = RouteParameter.Optional },
-                    new { id = @"\d+" });
-        }
-         */
-    }
-
-    public class SampleService
-    {
-        private readonly IRegistrationManager _registrationManager;
-
-        public SampleService(IRegistrationManager registrationManager)
-        {
-            _registrationManager = registrationManager;
-        }
-
-        public bool Start()
-        {
-            _registrationManager.Register();
-            Console.WriteLine("Started!");
-            return true;
-        }
-
-        public bool Stop()
-        {
-            _registrationManager.Deregister();
-            Console.WriteLine("Stopped!");
-            return true;
-        }
-    }
-
-    public class SampleModule : NinjectModule
-    {
-        public override void Load()
-        {
-            Bind<IRegistrationManager>().ToConstructor(_ => new RegistrationManager("BusinessService", "http://localhost", 12346, "dev")).InSingletonScope();
-
-            Bind<ApiController>().To<ItemsController>().Named("Items");
         }
     }
 }

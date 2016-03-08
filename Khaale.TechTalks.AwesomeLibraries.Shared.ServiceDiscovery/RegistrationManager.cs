@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -91,25 +90,36 @@ namespace Khaale.TechTalks.AwesomeLibraries.Shared.ServiceDiscovery
         }
     }
 
-    public interface IServiceLookup
+    public class RegistrationManagerSafe : IRegistrationManager
     {
-        Uri GetServiceUri(string serviceName, string tag);
-    }
+        private readonly IRegistrationManager _underlying;
 
-    public class ServiceLookup : IServiceLookup
-    {
-        public Uri GetServiceUri(string serviceName, string tag)
+        public RegistrationManagerSafe(IRegistrationManager underlying)
         {
-            using (var client = new ConsulClient())
+            _underlying = underlying;
+        }
+
+        public void Register()
+        {
+            try
             {
-                var result = client.Catalog.Service(serviceName, tag).Result;
+                _underlying.Register();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to register the service: " + ex);
+            }
+        }
 
-                var service = result.Response.FirstOrDefault();
-                
-                if (service == null)
-                    throw new ApplicationException("Unable to find service in catalog");
-
-                return new Uri(string.Format("{0}:{1}", service.ServiceAddress, service.ServicePort));
+        public void Deregister()
+        {
+            try
+            {
+                _underlying.Deregister();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to deregister the service: " + ex);
             }
         }
     }

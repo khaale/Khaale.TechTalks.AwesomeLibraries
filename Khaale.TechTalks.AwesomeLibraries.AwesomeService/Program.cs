@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Configuration;
 using Khaale.TechTalks.AwesomeLibraries.AwesomeService.Api;
 using Khaale.TechTalks.AwesomeLibraries.AwesomeService.Jobs;
 using Khaale.TechTalks.AwesomeLibraries.AwesomeService.Registration;
@@ -14,6 +15,18 @@ namespace Khaale.TechTalks.AwesomeLibraries.AwesomeService
 {
     static class Program
     {
+        public static string ServiceName { get { return "IntegrationService"; } }
+
+        public static string Environment
+        {
+            get { return ConfigurationManager.AppSettings["Environment"] ?? "dev"; }
+        }
+
+        public static int ServicePort
+        {
+            get { return int.Parse(ConfigurationManager.AppSettings["ServicePort"] ?? "12345"); }
+        }
+
         static void Main(string[] args)
         {
             HostFactory.Run(c =>
@@ -64,7 +77,7 @@ namespace Khaale.TechTalks.AwesomeLibraries.AwesomeService
                         n.UseBootstrapper(
                             new NancyBootstrapper(NinjectBuilderConfigurator.Kernel));
 
-                        n.AddHost(port: 12345);
+                        n.AddHost(port: ServicePort);
                     });
                 });
             });
