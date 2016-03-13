@@ -55,11 +55,10 @@ namespace Khaale.TechTalks.AwesomeLibs.BusinessService
             });
         }
         
-        private static void ConfigureServer(System.Web.Http.HttpConfiguration configuration)
+        private static void ConfigureServer(HttpConfiguration configuration)
         {
             var routes = configuration.Routes;
 
-            configuration.MapHttpAttributeRoutes();
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

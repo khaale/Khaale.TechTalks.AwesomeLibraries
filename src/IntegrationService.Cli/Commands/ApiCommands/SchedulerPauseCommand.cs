@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Khaale.TechTalks.AwesomeLibs.IntegrationService.Cli.Commands
+namespace Khaale.TechTalks.AwesomeLibs.IntegrationService.Cli.Commands.Impl
 {
     public class SchedulerPauseCommand : ApiCommandBase
     {
