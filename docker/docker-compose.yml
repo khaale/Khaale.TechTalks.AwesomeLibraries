@@ -1,0 +1,15 @@
+﻿version: '2'
+
+services:
+  consul:
+    image: khaale/consul-nano
+    container_name: consul_agent
+    networks:
+      default:
+        aliases:
+          - consul-agent
+  awl-is:
+    image: khaale/awl-is
+    container_name: integration_service
+    links:
+      - consul

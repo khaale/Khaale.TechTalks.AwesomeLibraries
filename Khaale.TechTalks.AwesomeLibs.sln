@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F8ED3F17-4FC3-43C9-AA75-67698E4B7BDF}"
 EndProject
@@ -12,6 +12,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khaale.TechTalks.AwesomeLibs.IntegrationService.Cli", "src\IntegrationService.Cli\Khaale.TechTalks.AwesomeLibs.IntegrationService.Cli.csproj", "{ACF54482-837E-4547-A861-B260ADF74DB7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery", "src\Shared.ServiceDiscovery\Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery.csproj", "{058B54D1-7179-4D87-9BBE-8796276E52B0}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BusinessServiceCore", "src\BusinessServiceCore\BusinessServiceCore.xproj", "{7429125E-2F13-4BC3-9D62-21E68C593759}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "IntegrationServiceCore", "src\IntegrationServiceCore\IntegrationServiceCore.xproj", "{C7CE0F68-7BCE-4FFC-852F-9F9C47FFE164}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{77DDC16C-4D2A-4C9C-A097-C627E3C69864}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ServiceDiscoveryCore", "src\Shared.ServiceDiscoveryCore\ServiceDiscoveryCore.xproj", "{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,11 +46,24 @@ Global
 		{058B54D1-7179-4D87-9BBE-8796276E52B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{058B54D1-7179-4D87-9BBE-8796276E52B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{058B54D1-7179-4D87-9BBE-8796276E52B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7429125E-2F13-4BC3-9D62-21E68C593759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7429125E-2F13-4BC3-9D62-21E68C593759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7429125E-2F13-4BC3-9D62-21E68C593759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7429125E-2F13-4BC3-9D62-21E68C593759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7CE0F68-7BCE-4FFC-852F-9F9C47FFE164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7CE0F68-7BCE-4FFC-852F-9F9C47FFE164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7CE0F68-7BCE-4FFC-852F-9F9C47FFE164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7CE0F68-7BCE-4FFC-852F-9F9C47FFE164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{058B54D1-7179-4D87-9BBE-8796276E52B0} = {F8ED3F17-4FC3-43C9-AA75-67698E4B7BDF}
+		{CFF2FE3D-701C-47CB-BD5B-7D4D7DFE0447} = {F8ED3F17-4FC3-43C9-AA75-67698E4B7BDF}
 	EndGlobalSection
 EndGlobal
