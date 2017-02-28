@@ -10,6 +10,7 @@ using Topshelf.Nancy;
 using Topshelf.Ninject;
 using Topshelf.Quartz;
 using Topshelf.Quartz.Ninject;
+using System;
 
 namespace Khaale.TechTalks.AwesomeLibs.AwesomeService
 {
@@ -31,9 +32,6 @@ namespace Khaale.TechTalks.AwesomeLibs.AwesomeService
         {
             HostFactory.Run(c =>
             {
-                //c.UseNLog();
-                
-
                 // Topshelf.Ninject (Optional) - Initiates Ninject and consumes Modules
                 c.UseNinject(new SampleModule());
 
@@ -42,34 +40,29 @@ namespace Khaale.TechTalks.AwesomeLibs.AwesomeService
                     //Topshelf.Ninject (Optional) - Construct service using Ninject
                     s.ConstructUsingNinject();
 
-                    s.WhenStarted((service, control) => service.Start());
-                    s.WhenStopped((service, control) => service.Stop());
 
                     // Topshelf.Quartz.Ninject (Optional) - Construct IJob instance with Ninject
                     s.UseQuartzNinject();
-                    
-                    //Set up misfire threshold property for testing purposes
-                    ScheduleJobServiceConfiguratorExtensions.SchedulerFactory = () =>
+
+                    ISchedulerFactory sf = new StdSchedulerFactory();
+                    IScheduler sched = sf.GetScheduler();
+
+                    var jobDetail = JobBuilder.Create<SampleJob>().Build();
+
+                    var key = new TriggerKey("trigger-name", "trigger-group");
+                    if (sched.GetTrigger(key) == null)
                     {
-                        var properties = new NameValueCollection();
-                        properties["org.quartz.jobStore.misfireThreshold"] = "1000";
+                        ITrigger trigger = TriggerBuilder.Create()
+                            .WithIdentity(key)
+                            .StartNow()
+                            .WithSimpleSchedule(x => x
+                                .RepeatForever()
+                                .WithInterval(TimeSpan.FromMinutes(1)))
+                            .Build();
 
-                        return new StdSchedulerFactory(properties).GetScheduler();
-                    };
-
-                    // Schedule a job to run in the background every 5 seconds.
-                    // The full Quartz Builder framework is available here.
-                    s.ScheduleQuartzJob(q =>
-                        q.WithJob(() =>
-                            JobBuilder.Create<SampleJob>().Build())
-                        .AddTrigger(() =>
-                            TriggerBuilder.Create()
-                                .WithSimpleSchedule(builder => builder
-                                    .WithIntervalInSeconds(5)
-                                    .RepeatForever()
-                                    .WithMisfireHandlingInstructionNextWithRemainingCount())
-                                .Build())
-                        );
+                        sched.ScheduleJob(jobDetail, trigger);
+                    }
+                    sched.Start();
 
                     // Set up REST API based on Nancy
                     s.WithNancyEndpoint(c, n =>
@@ -79,6 +72,10 @@ namespace Khaale.TechTalks.AwesomeLibs.AwesomeService
 
                         n.AddHost(port: ServicePort);
                     });
+
+
+                    s.WhenStarted((service, control) => service.Start());
+                    s.WhenStopped((service, control) => { sched.Shutdown(true); return service.Stop(); });
                 });
             });
         }

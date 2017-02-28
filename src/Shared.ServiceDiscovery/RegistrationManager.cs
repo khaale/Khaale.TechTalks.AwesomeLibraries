@@ -18,8 +18,16 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
         private readonly string _address;
         private readonly int _port;
         private readonly string[] _tags;
-        private readonly ConsulClient _client;
         private readonly CancellationTokenSource _cts;
+
+        private ConsulClient _client;
+        private ConsulClient Client
+        {
+            get
+            {
+                return _client ?? (_client = new ConsulClient());
+            }
+        }
 
         public RegistrationManager(string serviceName, string address, int port, params string[] tags)
         {
@@ -27,8 +35,7 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
             _address = address;
             _port = port;
             _tags = tags;
-
-            _client = new ConsulClient();
+                        
             _cts = new CancellationTokenSource();
         }
 
@@ -50,7 +57,7 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
                 Port = _port
             };
 
-            var result = _client.Agent.ServiceRegister(registration).Result;
+            var result = Client.Agent.ServiceRegister(registration).Result;
             Console.WriteLine("Service {0} registered. Response status code: {1}", _serviceName, result.StatusCode);
 
             Task.Run(() => PassTtl(_cts.Token), _cts.Token);
@@ -60,7 +67,7 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
         {
             _cts.Cancel();
 
-            var result = _client.Agent.ServiceDeregister(GetServiceId()).Result;
+            var result = Client.Agent.ServiceDeregister(GetServiceId()).Result;
             Console.WriteLine("Service {0} deregistered. Response status code: {1}", _serviceName, result.StatusCode);
         }
 
@@ -73,7 +80,7 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
         {
             while (!token.IsCancellationRequested)
             {
-                _client.Agent.PassTTL("service:" + GetServiceId(), "Test Check").GetAwaiter().GetResult();
+                Client.Agent.PassTTL("service:" + GetServiceId(), "Test Check").GetAwaiter().GetResult();
 
                 token.WaitHandle.WaitOne(TimeSpan.FromSeconds(30));
             }
@@ -81,9 +88,9 @@ namespace Khaale.TechTalks.AwesomeLibs.Shared.ServiceDiscovery
 
         public void Dispose()
         {
-            if (_client != null)
+            if (Client != null)
             {
-                _client.Dispose();
+                Client.Dispose();
             }
         }
     }
